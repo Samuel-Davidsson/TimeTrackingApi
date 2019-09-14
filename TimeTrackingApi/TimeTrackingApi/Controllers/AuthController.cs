@@ -35,15 +35,15 @@ namespace TimeTrackingApi.Controllers
             {
                 return BadRequest("Lösenorden matchar inte.");
             }
-                bool emailExist = _authControllerServices.CheckMailAddress(users, userViewModel);
-                if (emailExist == false)
-                {
-                    var user = Mapper.ViewModelToModelMapping.UserViewModelToUser(userViewModel);
-                    user.Password = _hashPassword.Hash(userViewModel.Password);
-                    _userService.Add(user);
-                    return Ok("Användaren har sparats, du skickas till login sidan inom 5 sekunder!");
+            bool emailExist = _authControllerServices.CheckMailAddress(users, userViewModel);
+            if (emailExist == false)
+            {
+                var user = Mapper.ViewModelToModelMapping.UserViewModelToUser(userViewModel);
+                user.Password = _hashPassword.Hash(userViewModel.Password);
+                _userService.Add(user);
+                return Ok("Användaren har sparats, du skickas till login sidan inom 5 sekunder!");
 
-                }
+            }
             return BadRequest("Mailadressen är redan registerad.");
         }
 
@@ -53,15 +53,19 @@ namespace TimeTrackingApi.Controllers
             var users = _userService.GetAll().ToArray();
 
             bool emailExist = _authControllerServices.CheckMailAddress(users, userViewModel);
-            bool isValid = _authControllerServices.CheckPassword(users, userViewModel, _hashPassword);
-            if (isValid == true && emailExist == true)
+            if (emailExist == true)
             {
                 var user = _userService.GetUserByLogin(userViewModel.Login);
-                var AuthUser = Mapper.ModelToViewModelMapping.UserViewmodel(user);
-                var tokenString = _authControllerServices.CreateTokenToString(_configuration);
-                AuthUser.Token = tokenString;
-                return Ok(AuthUser);
+                bool isValid = _authControllerServices.CheckPassword(user, userViewModel, _hashPassword);
+                if (isValid == true)
+                {
+                    var AuthUser = Mapper.ModelToViewModelMapping.UserViewmodel(user);
+                    var tokenString = _authControllerServices.CreateTokenToString(_configuration);
+                    AuthUser.Token = tokenString;
+                    return Ok(AuthUser);
+                }
             }
+
             return BadRequest("Användarnamnet eller lösenordet är felaktigt.");
         }
     }

@@ -44,17 +44,13 @@ namespace TimeTrackingApi.Services
             return false;
         }
 
-        public bool CheckPassword(User[] users, UserViewmodel userViewmodel, HashPassword _hashPassword)
+        public bool CheckPassword(User user, UserViewmodel userViewmodel, HashPassword _hashPassword)
         {
-            for (int i = 0; i < users.Length; i++)
+            if (_hashPassword.Verify(userViewmodel.Password, user.Password))
             {
-                if (_hashPassword.Verify(userViewmodel.Password, users[i].Password))
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
         }
-
     }
 }
