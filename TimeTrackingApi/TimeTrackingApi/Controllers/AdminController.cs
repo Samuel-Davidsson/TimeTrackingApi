@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Domain.Interfaces;
 using Domain.Services;
+using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
 using TimeTrackingApi.Helpers;
 using TimeTrackingApi.Services;
@@ -35,6 +36,7 @@ namespace TimeTrackingApi.Controllers
             return Ok(updatedReportViewmodel);
         }
         [HttpGet("{id}")]
+        [EnableQuery()]
         public IActionResult GetUsersByAdminId(int id)
         {
             var adminUser = _userService.GetUserById(id);

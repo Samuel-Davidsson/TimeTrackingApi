@@ -33,11 +33,11 @@ namespace TimeTrackingApi.Tests
             //Arrange
             var checkPassword = new AuthControllerServices();
             var hashPassword = new HashPassword();
-            var users = UserData().ToArray();
+            var user = UserData().Where(u => u.Id == 1).SingleOrDefault();
             var userViewmodel = UserViewModelData();
 
             //Act
-            var actual = checkPassword.CheckPassword(users, userViewmodel, hashPassword);
+            var actual = checkPassword.CheckPassword(user, userViewmodel, hashPassword);
 
             //Assert
             Assert.True(actual);

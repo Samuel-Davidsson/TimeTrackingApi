@@ -3,6 +3,7 @@ using Data.DataContext;
 using Data.Repositories;
 using Domain.Interfaces;
 using Domain.Services;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,6 +31,7 @@ namespace TimeTrackingApi
         {
 
             services.AddCors();
+            services.AddOData();
             services.AddSingleton(Configuration);
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IReportRepository, ReportRepository>();
@@ -87,7 +89,11 @@ namespace TimeTrackingApi
             }
             app.UseAuthentication();
             app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseMvc(routebuilder => 
+            {
+                routebuilder.EnableDependencyInjection();
+                routebuilder.Expand().Select().Count().OrderBy();
+            });
         }
     }
 }

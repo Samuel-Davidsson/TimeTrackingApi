@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Domain.Entities;
+using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Testar.Controllers
@@ -12,9 +14,19 @@ namespace Testar.Controllers
     {
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        [EnableQuery()]
+        public ActionResult<IEnumerable<User>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var users = new List<User>
+            {
+                new User {Id = 6, FirstName = "John", LastName = "Doe", Login = "John@gg.com", Department="Sell", IsAdmin = false},
+                new User {Id = 2, FirstName = "Eric", LastName = "Evans", Login = "Eric@gg.com", Department="Sell", IsAdmin = false},
+                new User {Id = 1, FirstName = "Samuel", LastName = "Davidsson", Login = "Sam@gg.com", Department="test", IsAdmin = false},
+                new User {Id = 4, FirstName = "Kent", LastName = "Beck", Login = "Kent@gg.com", Department="Test", IsAdmin = true},
+                new User {Id = 5, FirstName = "Uncle", LastName = "Bob", Login = "Uncle@gg.com", Department="Sell", IsAdmin = false}
+            };
+            return users;
+
         }
 
         // GET api/values/5
